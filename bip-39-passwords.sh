@@ -2,12 +2,12 @@
 
 #####################################################################
 
-# this function will generate a random number between 0 and 2047
+# this function will generate a random number between 1 and 2048
 get_rng_word() {
-    shuf -n 1 -i 0-2047
+    shuf -n 1 -i 1-2048
 }
 
-# this function generates a random number
+# this function gets a random number from `get_rng_word`
 # then, the function looks up the word at that number
 get_word() {
     number=$(get_rng_word)
