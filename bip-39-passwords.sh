@@ -17,38 +17,6 @@ get_word() {
 
 #####################################################################
 
-scuff_one() {
-    test_arr=()
-
-    test_arr+=("$(get_word)")
-    test_arr+=("$(get_word)")
-    test_arr+=("$(get_word)")
-
-    echo "my test array: ${test_arr[@]}"
-}
-
-#####################################################################
-
-scuff_two() {
-    test_array=()
-    wordlength=3
-    length=($(seq 1 "$wordlength"))
-
-    for i in "${length[@]}"; do
-        word=$(get_word)
-
-        # separate array items
-        #test_array+=("${word@u}")
-
-        # one single array item
-        test_array+="${word@u}"
-    done
-
-    echo "${test_array[@]}"
-}
-
-#####################################################################
-
 ask_number_words() {
     read -r -p "How many words you want? " number_words
 
@@ -96,14 +64,14 @@ ask_number_numbers() {
 
 gen_pass_numbers() {
     array_numbers=()
-    wordlength=$(ask_number_numbers)
-    length=($(seq 1 "$wordlength"))
+    numlength=$(ask_number_numbers)
+    length=($(seq 1 "$numlength"))
 
     for i in "${length[@]}"; do
         number=$(get_rng_number)
 
         # separate array items
-        #test_array+=("${word@u}")
+        #array_numbers+=("${number}")
 
         # one single array item
         array_numbers+="${number}"
