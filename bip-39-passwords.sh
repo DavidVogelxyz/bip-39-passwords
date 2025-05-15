@@ -17,12 +17,36 @@ get_word() {
 
 #####################################################################
 
-test_arr=()
+scuff_one() {
+    test_arr=()
 
-test_arr+=("$(get_word)")
-test_arr+=("$(get_word)")
-test_arr+=("$(get_word)")
+    test_arr+=("$(get_word)")
+    test_arr+=("$(get_word)")
+    test_arr+=("$(get_word)")
 
-echo "my test array: ${test_arr[@]}"
+    echo "my test array: ${test_arr[@]}"
+}
 
 #####################################################################
+
+scuff_two() {
+    test_array=()
+    wordlength=3
+    length=($(seq 1 "$wordlength"))
+
+    for i in "${length[@]}"; do
+        word=$(get_word)
+
+        # separate array items
+        #test_array+=("${word@u}")
+
+        # one single array item
+        test_array+="${word@u}"
+    done
+
+    echo "my test array: ${test_array[@]}"
+}
+
+#####################################################################
+
+scuff_two
