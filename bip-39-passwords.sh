@@ -59,8 +59,8 @@ ask_number_words() {
     echo "$number_words"
 }
 
-scuff_three() {
-    test_array=()
+gen_pass_words() {
+    array_words=()
     wordlength=$(ask_number_words)
     length=($(seq 1 "$wordlength"))
 
@@ -71,12 +71,51 @@ scuff_three() {
         #test_array+=("${word@u}")
 
         # one single array item
-        test_array+="${word@u}"
+        array_words+="${word@u}"
     done
 
-    echo "${test_array[@]}"
+    #echo "${array_words[@]}"
 }
 
 #####################################################################
 
-scuff_three
+# this function will generate a random number between 0 and 9
+get_rng_number() {
+    shuf -n 1 -i 0-9
+}
+
+ask_number_numbers() {
+    read -r -p "How many numbers you want? " number_numbers
+
+    while ! echo "$number_numbers" | grep -q "^[0-9][0-9]*$"; do
+        read -r -p "A NUMBER, PLEASE." number_numbers
+    done
+
+    echo "$number_numbers"
+}
+
+gen_pass_numbers() {
+    array_numbers=()
+    wordlength=$(ask_number_numbers)
+    length=($(seq 1 "$wordlength"))
+
+    for i in "${length[@]}"; do
+        number=$(get_rng_number)
+
+        # separate array items
+        #test_array+=("${word@u}")
+
+        # one single array item
+        array_numbers+="${number}"
+    done
+
+    #echo "${array_numbers[@]}"
+}
+
+#####################################################################
+
+gen_pass_words
+
+gen_pass_numbers
+
+echo "${array_words}${array_numbers}"
