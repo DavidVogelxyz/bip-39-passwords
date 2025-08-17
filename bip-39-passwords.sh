@@ -2,17 +2,27 @@
 
 #####################################################################
 
-# this function will generate a random number between 1 and 2048
-get_rng_word() {
-    shuf -n 1 -i 1-2048
+# this functions grabs the wordlist
+# prefers the `wordlist.txt` local to the repo
+# if that doesn't exist, check the `/tmp` directory
+# if that doesn't exist, grab the wordlist from GitHub
+get_wordlist() {
+    if [[ -z wordlist.txt ]]; then
+        if [[ -z /tmp/bip-39-passwords/wordlist.txt ]]; then
+            mkdir -p /tmp/bip-39-passwords
+            curl https://raw.githubusercontent.com/bitcoin/bips/refs/heads/master/bip-0039/english.txt > /tmp/bip-39-passwords/wordlist.txt
+        fi
+
+        wordlist="/tmp/bip-39-passwords/wordlist.txt"
+    else
+        wordlist="wordlist.txt"
+    fi
 }
 
-# this function gets a random number from `get_rng_word`
-# then, the function looks up the word at that number
-get_word() {
-    number=$(get_rng_word)
-
-    sed -n "${number}"p wordlist.txt
+# this function will get some randomness
+# `$1` is the range (ex. 1-100)
+get_rng() {
+    shuf -n 1 -i $1
 }
 
 #####################################################################
@@ -25,6 +35,14 @@ ask_number_words() {
     done
 
     echo "$number_words"
+}
+
+# this function gets a random number between 1 and 2048
+# then, the function looks up the word at that value
+get_word() {
+    number=$(get_rng "1-2048")
+
+    sed -n "${number}"p "$wordlist"
 }
 
 gen_pass_words() {
@@ -47,11 +65,6 @@ gen_pass_words() {
 
 #####################################################################
 
-# this function will generate a random number between 0 and 9
-get_rng_number() {
-    shuf -n 1 -i 0-9
-}
-
 ask_number_numbers() {
     read -r -p "How many numbers you want? " number_numbers
 
@@ -68,7 +81,7 @@ gen_pass_numbers() {
     length=($(seq 1 "$numlength"))
 
     for i in "${length[@]}"; do
-        number=$(get_rng_number)
+        number=$(get_rng "0-9")
 
         # separate array items
         #array_numbers+=("${number}")
@@ -82,8 +95,14 @@ gen_pass_numbers() {
 
 #####################################################################
 
-gen_pass_words
+main() {
+    get_wordlist
 
-gen_pass_numbers
+    gen_pass_words
 
-echo "${array_words}${array_numbers}"
+    gen_pass_numbers
+
+    echo "${array_words}${array_numbers}"
+}
+
+main
